@@ -55,7 +55,7 @@ class RoomList extends Component {
                 key={room.key}
                 onClick={ () => this.props.handleRoomUpdate(room) }
                 className="room">
-                  # {room.name}
+                  #{room.name}
               </li>)
             })
           }

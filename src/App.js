@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import RoomList from './components/RoomList';
 import MessageList from './components/MessageList';
+import User from './components/User';
 import './App.css';
 import firebase from 'firebase/app';
 import 'firebase/database';
@@ -21,13 +22,17 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeRoom: ''
+      activeRoom: '',
+      user: null
     };
   }
 
   updateActiveRoom(room) {
-    console.log('Room update', this.state.activeRoom.name);
     this.setState({ activeRoom: room });
+  }
+
+  setUser(user) {
+    this.setState({ user: user });
   }
 
   render() {
@@ -35,16 +40,20 @@ class App extends Component {
       <div className="App">
         <div className="sidebar">
           <h3>Chatterbox</h3>
+          <User
+            firebase = { firebase }
+            setUser = { (user) => this.setUser(user) }
+            user = { this.state.user }
+          />
           <RoomList
-            firebase={firebase}
+            firebase={ firebase }
             handleRoomUpdate = { (room) => this.updateActiveRoom(room) }
             activeRoom = { this.state.activeRoom }
           />
         </div>
         <div className="chat-container">
           <MessageList
-            firebase={firebase}
-            handleRoomUpdate = { (room) => this.updateActiveRoom(room) }
+            firebase={ firebase }
             activeRoom = { this.state.activeRoom }
           />
         </div>
