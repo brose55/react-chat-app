@@ -1,0 +1,7 @@
+.username {
+  background: gray;
+}
+
+.message:nth-child(even) {
+  background: #CCC
+}
