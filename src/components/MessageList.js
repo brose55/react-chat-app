@@ -55,6 +55,14 @@ class MessageList extends Component {
     });
   }
 
+  deleteMessage(messageKey) {
+        const message = this.props.firebase.database().ref('/messages/' + messageKey);
+        message.remove();
+        const remainingMessages = this.state.messages.filter(message => message.key !== messageKey);
+        this.setState({ messages: remainingMessages});
+    }
+
+
   render() {
     const timeNow = <Moment format="MM/DD/YY"></Moment>;
     const roomMessages = this.state.messages.filter(message => message.roomId === this.props.activeRoom.key)
@@ -70,6 +78,7 @@ class MessageList extends Component {
                                                 <div key={ message.key } className="message">
                                                   <h4 className="username">{ message.username }: </h4>
                                                   <p>{message.content}</p>
+                                                  <button onClick={() => this.deleteMessage(message.key)}>X</button>
                                                   <footer>
                                                     <p>sent{notToday ? ":" : " at:"} {timeSent}</p>
                                                   </footer>
@@ -79,6 +88,7 @@ class MessageList extends Component {
 
     return (
       <div className='message-list'>
+        <header><h1>{this.props.activeRoom.name}</h1></header>
         <div className="messages">{roomMessages}</div>
         <form onSubmit={ (e) => this.handleSumbmit(e) }>
           <input

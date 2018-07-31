@@ -42,6 +42,13 @@ class RoomList extends Component {
     })
   }
 
+  deleteRoom(roomKey) {
+        const room = this.props.firebase.database().ref('/rooms/' + roomKey);
+        room.remove();
+        const remainingRooms = this.state.rooms.filter(room => room.key !== roomKey);
+        this.setState({ rooms: remainingRooms});
+    }
+
   hideForm() {
     const newDisplay = this.state.display === 'none' ? 'block' : 'none';
     this.setState({ display: newDisplay });
@@ -59,6 +66,7 @@ class RoomList extends Component {
                                           className="room">
                                           #{room.name.toLowerCase()}
                                         </li>
+                                        <button onClick={ () => this.deleteRoom(room.key) }>X</button>
                                       </div>
                                     )
                                   })
