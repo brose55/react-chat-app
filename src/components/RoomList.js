@@ -17,7 +17,7 @@ class RoomList extends Component {
     this.roomsRef.on('child_added', snapshot => {
       const room = snapshot.val();
       room.key = snapshot.key;
-      this.setState({ rooms: this.state.rooms.concat( room ) });
+      this.setState({ rooms: this.state.rooms.sort().concat( room ) });
     });
   }
 
@@ -27,8 +27,12 @@ class RoomList extends Component {
 
   handleSumbmit(e) {
     e.preventDefault();
+    console.log(this.state.rooms);
     if (!this.state.newRoomName) { return }
-    this.setState({ newRoomName: '' });
+    this.setState({
+      newRoomName: '',
+
+    });
     this.hideForm();
   }
 
@@ -44,22 +48,24 @@ class RoomList extends Component {
   }
 
 
+
   render() {
-    return(
+    const rooms = this.state.rooms.sort((a, b) => a.name > b.name)
+                                  .map(room => {
+                                    return(
+                                      <div key={room.key}>
+                                        <li
+                                          onClick={ () => this.props.handleRoomUpdate(room) }
+                                          className="room">
+                                          #{room.name.toLowerCase()}
+                                        </li>
+                                      </div>
+                                    )
+                                  })
+
+    return (
       <div className="room-list">
-        <ul>
-          {
-            this.state.rooms.map(room => {
-              return(
-              <li
-                key={room.key}
-                onClick={ () => this.props.handleRoomUpdate(room) }
-                className="room">
-                  #{room.name}
-              </li>)
-            })
-          }
-        </ul>
+        <ul>{ rooms }</ul>
         <button className="new-room-button" onClick={this.hideForm}>New Room</button>
         <form style={{display: this.state.display}} onSubmit={ (e) => this.handleSumbmit(e) }>
           <input
@@ -67,10 +73,11 @@ class RoomList extends Component {
             value={ this.state.newRoomName }
             onChange={ (e) => this.handleChange(e) }
           />
-          <input
+          <button
             type="submit"
-            onClick={ () => this.createRoom() }
-          />
+            onClick={ () => this.createRoom() }>
+              Go
+          </button>
         </form>
       </div>
     )
