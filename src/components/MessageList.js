@@ -16,6 +16,7 @@ class MessageList extends Component {
     this.messagesRef = this.props.firebase.database().ref('messages');
   }
 
+  // adds firebase messages to state
   componentDidMount() {
     this.messagesRef.orderByChild('sentAt').equalTo('this.state.sentAt')
     this.messagesRef.on('child_added', snapshot => {
@@ -25,6 +26,7 @@ class MessageList extends Component {
     });
   }
 
+  // new message form functionality
   handleChange(e){
     this.setState({
       content: e.target.value,
@@ -34,6 +36,7 @@ class MessageList extends Component {
     });
   }
 
+  // sets state after form submission
   handleSumbmit(e) {
     e.preventDefault();
     if (!this.state.content) {return}
@@ -43,8 +46,10 @@ class MessageList extends Component {
       username: '',
       sentAt: ''
     })
+    this.createMessage();
   }
 
+  // pushes new message to firebase
   createMessage() {
     const currentUser = this.props.user === null ? "Guest" : this.props.user.displayName;
     this.messagesRef.push({
@@ -55,6 +60,7 @@ class MessageList extends Component {
     });
   }
 
+  // deletes message from state and firebase
   deleteMessage(messageKey) {
         const message = this.props.firebase.database().ref('/messages/' + messageKey);
         message.remove();
@@ -65,12 +71,17 @@ class MessageList extends Component {
 
   render() {
     const timeNow = <Moment format="MM/DD/YY"></Moment>;
+
+    // maps over messages array and returns messages from current room.
     const roomMessages = this.state.messages.filter(message => message.roomId === this.props.activeRoom.key)
                                             .map(message => {
+
+                                              // formats timestamp
                                               let notToday = moment(message.sentAt).isBefore(timeNow);
                                               const sentToday = <Moment fromNow>{ message.sentAt }</Moment>;
                                               const sentBefore = <Moment format="HH:mm">{ message.sentAt }</Moment>;
 
+                                              // conditionally renders format based on day
                                               let timeSent;
                                               notToday ? timeSent = sentToday : timeSent = sentBefore
 
@@ -90,17 +101,14 @@ class MessageList extends Component {
       <div className='message-list'>
         <header><h1>{this.props.activeRoom.name}</h1></header>
         <div className="messages">{roomMessages}</div>
-        <form onSubmit={ (e) => this.handleSumbmit(e) }>
+        <form className="create-new-message" onSubmit={ (e) => this.handleSumbmit(e) }>
           <input
             type="text"
             placeholder="say something interesting..."
             value={this.state.content}
             onChange={ (e) => this.handleChange(e) }
           />
-          <button
-            type="sumbit"
-            onClick={ () => this.createMessage() }
-          >Send</button>
+          <button type="sumbit">Send</button>
         </form>
       </div>
     )

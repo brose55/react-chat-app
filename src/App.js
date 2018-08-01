@@ -28,10 +28,17 @@ class App extends Component {
     };
   }
 
+  // update the active room when a user clicks on a room name
   updateActiveRoom(room) {
     this.setState({ activeRoom: room });
   }
 
+  // trigger new render after room deletion
+  deleteRender(room) {
+    this.setState({ activeRoom: '' });
+  }
+
+  // set user after sign-in
   setUser(user) {
     this.setState({ user: user });
   }
@@ -50,11 +57,12 @@ class App extends Component {
             firebase={ firebase }
             handleRoomUpdate = { (room) => this.updateActiveRoom(room) }
             activeRoom = { this.state.activeRoom }
-            handleRerender = { () => this.roomRender() }
+            handleDelete = { (room) => this.deleteRender(room) }
           />
         </div>
         <div className="chat-container">
           {
+            // display landing page or messageList
             this.state.activeRoom === '' ?
             <Landing /> :
             <div className="messages-container">
