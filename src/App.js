@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import RoomList from './components/RoomList';
 import MessageList from './components/MessageList';
 import User from './components/User';
+import Landing from './components/Landing';
 import './App.css';
 import firebase from 'firebase/app';
 import 'firebase/database';
@@ -49,14 +50,21 @@ class App extends Component {
             firebase={ firebase }
             handleRoomUpdate = { (room) => this.updateActiveRoom(room) }
             activeRoom = { this.state.activeRoom }
+            handleRerender = { () => this.roomRender() }
           />
         </div>
         <div className="chat-container">
-          <MessageList
-            firebase={ firebase }
-            activeRoom = { this.state.activeRoom }
-            user = { this.state.user }
-          />
+          {
+            this.state.activeRoom === '' ?
+            <Landing /> :
+            <div className="messages-container">
+              <MessageList
+                firebase={ firebase }
+                activeRoom = { this.state.activeRoom }
+                user = { this.state.user }
+              />
+            </div>
+          }
         </div>
       </div>
     )

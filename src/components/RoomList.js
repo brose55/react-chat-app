@@ -7,7 +7,7 @@ class RoomList extends Component {
     this.state = {
       rooms: [],
       newRoomName: '',
-      display:"none"
+      display:"none",
     };
     this.hideForm = this.hideForm.bind(this);
     this.roomsRef = this.props.firebase.database().ref('rooms');
@@ -27,13 +27,12 @@ class RoomList extends Component {
 
   handleSumbmit(e) {
     e.preventDefault();
-    console.log(this.state.rooms);
     if (!this.state.newRoomName) { return }
     this.setState({
       newRoomName: '',
-
     });
     this.hideForm();
+    this.props.handleRerender();
   }
 
   createRoom() {
