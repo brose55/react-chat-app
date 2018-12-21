@@ -22,12 +22,10 @@ class RoomList extends Component {
     });
   }
 
-  // new room input field functionality
   handleChange(e) {
     this.setState({ newRoomName: e.target.value })
   }
 
-  // sets state after form submission then hides form
   handleSumbmit(e) {
     e.preventDefault();
     this.createRoom()
@@ -38,7 +36,6 @@ class RoomList extends Component {
     this.hideForm();
   }
 
-  // pushes augmented room list to firebase
   createRoom() {
     this.roomsRef.push({
       name: this.state.newRoomName
@@ -50,7 +47,6 @@ class RoomList extends Component {
     this.setState({ display: newDisplay });
   }
 
-  // deletes room from firebase and state
   deleteRoom(roomKey) {
         const room = this.props.firebase.database().ref('/rooms/' + roomKey);
         room.remove();
@@ -59,11 +55,20 @@ class RoomList extends Component {
         this.props.handleRoomUpdate('');
     }
 
-  render() {
-    // returns the sorted room list
-    const rooms = this.state.rooms.sort((a, b) => a.name > b.name)
-                                  .map(room => {
+	alphabetize(a, b) {
+	  const roomA = a.props.children[0].props.children[1];
+	  const roomB = b.props.children[0].props.children[1];
+	  let comparison = 0;
+	  if (roomA > roomB) {
+	    comparison = 1;
+	  } else if (roomA < roomB) {
+	    comparison = -1;
+	  }
+	  return comparison;
+	}
 
+  render() {
+    const rooms = this.state.rooms.map(room => {
                                     return (
                                       <div key={room.key}>
                                         <li
@@ -77,7 +82,9 @@ class RoomList extends Component {
                                           }}>X</button>
                                       </div>
                                     )
-                                  })
+                                  });
+		rooms.sort(this.alphabetize)
+
     return (
       <div className="room-list">
         <ul>{ rooms }</ul>

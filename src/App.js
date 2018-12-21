@@ -4,6 +4,7 @@ import MessageList from './components/MessageList';
 import User from './components/User';
 import Landing from './components/Landing';
 import './App.css';
+import mouth from './mouth.png';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/auth';
@@ -28,50 +29,50 @@ class App extends Component {
     };
   }
 
-  // update the active room when a user clicks on a room name
   updateActiveRoom(room) {
     this.setState({ activeRoom: room });
   }
 
-  // trigger new render after room deletion
-  deleteRender(room) {
+// triggers render after room deletion
+  updateRender(room) {
     this.setState({ activeRoom: '' });
   }
 
-  // set user after sign-in
   setUser(user) {
     this.setState({ user: user });
   }
 
   render() {
     return (
-      <div className="App">
+      <div className="App flex">
         <div className="sidebar">
-          <h3>Chatterbox</h3>
-          <User
-            firebase = { firebase }
-            setUser = { (user) => this.setUser(user) }
-            user = { this.state.user }
-          />
-          <RoomList
-            firebase={ firebase }
-            handleRoomUpdate = { (room) => this.updateActiveRoom(room) }
-            activeRoom = { this.state.activeRoom }
-            handleDelete = { (room) => this.deleteRender(room) }
-          />
+					<div className="header flex">
+						<img src={mouth} alt='mouth-logo' />
+						<h3>Chatterbox</h3>
+					</div>
+					<div className="greeting flex">
+						<p>Hello, </p>
+							<User
+								firebase = { firebase }
+								setUser = { (user) => this.setUser(user) }
+								user = { this.state.user }
+							/>
+					</div>
+					<RoomList
+						firebase={ firebase }
+						handleRoomUpdate = { (room) => this.updateActiveRoom(room) }
+						activeRoom = { this.state.activeRoom }
+						handleDelete = { (room) => this.updateRender(room) }
+					/>
         </div>
         <div className="chat-container">
           {
-            // display landing page or messageList
             this.state.activeRoom === '' ?
             <Landing /> :
-            <div className="messages-container">
-              <MessageList
-                firebase={ firebase }
-                activeRoom = { this.state.activeRoom }
-                user = { this.state.user }
-              />
-            </div>
+            <MessageList
+              firebase={ firebase }
+              activeRoom = { this.state.activeRoom }
+              user = { this.state.user } />
           }
         </div>
       </div>
