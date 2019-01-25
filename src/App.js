@@ -47,16 +47,8 @@ class App extends Component {
       <div className="App flex">
         <div className="sidebar">
 					<div className="header flex">
-						<img src={mouth} alt='mouth-logo' />
+						<img src={mouth} alt='mouth-logo' className="logo" />
 						<h3>Chatterbox</h3>
-					</div>
-					<div className="greeting flex">
-						<p>Hello, </p>
-							<User
-								firebase = { firebase }
-								setUser = { (user) => this.setUser(user) }
-								user = { this.state.user }
-							/>
 					</div>
 					<RoomList
 						firebase={ firebase }
@@ -66,6 +58,13 @@ class App extends Component {
 					/>
         </div>
         <div className="chat-container">
+					<div>
+						<User
+							firebase = { firebase }
+							setUser = { (user) => this.setUser(user) }
+							user = { this.state.user }
+						/>
+					</div>
           {
             this.state.activeRoom === '' ?
             <Landing /> :

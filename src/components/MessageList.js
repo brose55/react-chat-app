@@ -74,14 +74,13 @@ class MessageList extends Component {
                                               const sentToday = <Moment fromNow>{ message.sentAt }</Moment>;
                                               const sentBefore = <Moment format="HH:mm">{ message.sentAt }</Moment>;
 
-                                              // conditionally renders time format based on when message was sent
                                               let timeSent;
-                                              notToday ? timeSent = sentToday : timeSent = sentBefore
+                                              notToday ? timeSent = sentToday : timeSent = sentBefore;
 
                                               return (
                                                 <div key={ message.key } className="message">
                                                   <h4 className="username">{ message.username }: </h4>
-																									<button classname="delete-message" onClick={() => this.deleteMessage(message.key)}>X</button>
+																									<button classname="delete-message transparent" onClick={() => this.deleteMessage(message.key)}>X</button>
                                                   <p>{message.content}</p>
                                                   <footer>
                                                     <p>sent{notToday ? ":" : " at:"} {timeSent}</p>
@@ -92,7 +91,7 @@ class MessageList extends Component {
 
     return (
       <div className="message-list">
-        <h1 className="room-name">#{this.props.activeRoom.name}</h1>
+        <h1 className="room-name">#{this.props.activeRoom.name.toLowerCase()}</h1>
         <div className="messages">{roomMessages}</div>
         <form className="create-new-message" onSubmit={ (e) => this.handleSumbmit(e) }>
           <input
@@ -100,9 +99,9 @@ class MessageList extends Component {
             placeholder="say something interesting..."
             value={this.state.content}
             onChange={ (e) => this.handleChange(e) }
-						className="new-message"
+						className="new-message room-input"
           />
-          <button type="sumbit">Send</button>
+          <button className="transparent" type="sumbit">Send</button>
         </form>
       </div>
     )

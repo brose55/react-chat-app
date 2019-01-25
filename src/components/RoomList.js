@@ -13,7 +13,6 @@ class RoomList extends Component {
     this.roomsRef = this.props.firebase.database().ref('rooms');
   }
 
-  // adds firebase data to state
   componentDidMount() {
     this.roomsRef.on('child_added', snapshot => {
       const room = snapshot.val();
@@ -43,7 +42,7 @@ class RoomList extends Component {
   }
 
   hideForm() {
-    const newDisplay = this.state.display === 'none' ? 'block' : 'none';
+    const newDisplay = this.state.display === 'none' ? 'flex' : 'none';
     this.setState({ display: newDisplay });
   }
 
@@ -70,16 +69,15 @@ class RoomList extends Component {
   render() {
     const rooms = this.state.rooms.map(room => {
                                     return (
-                                      <div key={room.key}>
+                                      <div key={room.key} className="header flex">
                                         <li
                                           onClick={ () => this.props.handleRoomUpdate(room) }
                                           className="room">
                                           #{room.name.toLowerCase()}
                                         </li>
                                         <button
-                                          onClick={ () => {
-                                            this.deleteRoom(room.key);
-                                          }}>X</button>
+                                          onClick={ () => { this.deleteRoom(room.key) }}
+																					className="transparent">x</button>
                                       </div>
                                     )
                                   });
@@ -87,17 +85,23 @@ class RoomList extends Component {
 
     return (
       <div className="room-list">
+				<div className="header flex">
+					<p className="rooms">Rooms</p>
+					<button className="new-room transparent" onClick={this.hideForm}>NEW</button>
+				</div>
+				<hr />
         <ul>{ rooms }</ul>
-        <button className="new-room-button" onClick={this.hideForm}>New Room</button>
         <form
+					className="header"
           style={{display: this.state.display}}
           onSubmit={(e) => this.handleSumbmit(e)}>
           <input
+						className="room-input"
             type="text"
             value={ this.state.newRoomName }
             onChange={ (e) => this.handleChange(e) }
           />
-          <button type="submit">Go</button>
+          <button className="transparent right" type="submit">Go</button>
         </form>
       </div>
     )
