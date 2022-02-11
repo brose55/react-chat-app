@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "ajv": "^6.6.2",
+    "ajv": "^6.12.3",
     "firebase": "^5.7.2",
     "flatted": "^2.0.0",
     "kleur": "^3.0.1",
